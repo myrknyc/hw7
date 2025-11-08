@@ -1,0 +1,26 @@
+==8096== Memcheck, a memory error detector
+==8096== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==8096== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==8096== Command: ./bin/execute_script script18
+==8096== 
+execute_script: src/hw7.c:181: print_matrix_sf: Assertion `mat != NULL' failed.
+==8096== 
+==8096== Process terminating with default action of signal 6 (SIGABRT): dumping core
+==8096==    at 0x48FFB2C: __pthread_kill_implementation (pthread_kill.c:44)
+==8096==    by 0x48FFB2C: __pthread_kill_internal (pthread_kill.c:78)
+==8096==    by 0x48FFB2C: pthread_kill@@GLIBC_2.34 (pthread_kill.c:89)
+==8096==    by 0x48A627D: raise (raise.c:26)
+==8096==    by 0x48898FE: abort (abort.c:79)
+==8096==    by 0x488981A: __assert_fail_base.cold (assert.c:96)
+==8096==    by 0x489C516: __assert_fail (assert.c:105)
+==8096==    by 0x10998F: print_matrix_sf (hw7.c:181)
+==8096==    by 0x109344: main (execute_script.c:9)
+==8096== 
+==8096== HEAP SUMMARY:
+==8096==     in use at exit: 0 bytes in 0 blocks
+==8096==   total heap usage: 5 allocs, 5 frees, 1,937 bytes allocated
+==8096== 
+==8096== All heap blocks were freed -- no leaks are possible
+==8096== 
+==8096== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Aborted (core dumped)

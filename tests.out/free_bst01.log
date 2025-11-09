@@ -1,22 +1,13 @@
-==8143== Memcheck, a memory error detector
-==8143== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
-==8143== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
-==8143== Command: ./bin/free_bst01
-==8143== 
-==8143== 
-==8143== HEAP SUMMARY:
-==8143==     in use at exit: 36 bytes in 3 blocks
-==8143==   total heap usage: 3 allocs, 0 frees, 36 bytes allocated
-==8143== 
-==8143== 36 bytes in 3 blocks are definitely lost in loss record 1 of 1
-==8143==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8143==    by 0x10930D: main (free_bst01.c:8)
-==8143== 
-==8143== LEAK SUMMARY:
-==8143==    definitely lost: 36 bytes in 3 blocks
-==8143==    indirectly lost: 0 bytes in 0 blocks
-==8143==      possibly lost: 0 bytes in 0 blocks
-==8143==    still reachable: 0 bytes in 0 blocks
-==8143==         suppressed: 0 bytes in 0 blocks
-==8143== 
-==8143== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==2521== Memcheck, a memory error detector
+==2521== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==2521== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==2521== Command: ./bin/free_bst01
+==2521== 
+==2521== 
+==2521== HEAP SUMMARY:
+==2521==     in use at exit: 0 bytes in 0 blocks
+==2521==   total heap usage: 6 allocs, 6 frees, 108 bytes allocated
+==2521== 
+==2521== All heap blocks were freed -- no leaks are possible
+==2521== 
+==2521== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

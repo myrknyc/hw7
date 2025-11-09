@@ -1,14 +1,86 @@
 #include "hw7.h"
 
 bst_sf* insert_bst_sf(matrix_sf *mat, bst_sf *root) {
-    return NULL;
+    if(root==NULL)
+    {
+        bst_sf *RO = malloc(sizeof(bst_sf));
+        if(RO==NULL)
+        {
+            return NULL;
+        }
+        RO->mat = mat;
+        RO->left_child = NULL;
+        RO->right_child = NULL;
+
+        return RO;
+    }
+    else 
+    {
+        char ogN = root->mat->name;
+        char newN = mat->name;
+
+        if( newN < ogN) // go left
+        {
+            root->left_child = insert_bst_sf(mat, root->left_child);
+        }
+        else // go right
+        {
+            root->right_child = insert_bst_sf(mat, root->right_child);
+        }
+        
+    }
+    return root;
 }
 
 matrix_sf* find_bst_sf(char name, bst_sf *root) {
+    if(root==NULL)
+    {
+        return NULL;
+    }
+    if(root->mat->name == name)
+    {
+        return root->mat;
+    }
+    if(root->mat->name > name) // go left
+    {
+        return find_bst_sf(name, root->left_child);
+    }
+    else
+    {
+        return find_bst_sf(name, root->right_child);
+    }
     return NULL;
 }
 
 void free_bst_sf(bst_sf *root) {
+    if(root==NULL)
+    {
+        return;
+    }
+    else if(root->left_child==NULL && root->right_child==NULL)
+    {
+        free(root->mat);
+        free(root);
+    }
+    else if(root->left_child==NULL)
+    {
+        free_bst_sf(root->right_child);
+        free(root->mat);
+        free(root);
+    }
+    else if(root->right_child==NULL)
+    {
+        free_bst_sf(root->left_child);
+        free(root->mat);
+        free(root);
+    }
+    else
+    {
+        free_bst_sf(root->left_child);
+        free_bst_sf(root->right_child);
+        free(root->mat);
+        free(root);
+    }
 }
 
 matrix_sf* add_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
@@ -54,7 +126,7 @@ matrix_sf* mult_mats_sf(const matrix_sf *mat1, const matrix_sf *mat2) {
     {
         for(int j=0; j <mat2->num_cols; j++)
         {
-            sum=0;
+            sum=0;  
             for(int k=0; k<mat1->num_cols;k++)
             {
                 int index1 = i * mat1->num_cols + k;
@@ -189,4 +261,3 @@ void print_matrix_sf(matrix_sf *mat) {
     }
     printf("\n");
 }
-

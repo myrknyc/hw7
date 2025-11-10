@@ -1,5 +1,22 @@
 #include "hw7.h"
-
+int prec(char c);
+int prec(char c)
+{
+    if(c=='\'')
+    {
+        return 3;
+    }
+    else if(c == '*')
+    {
+        return 2;
+    }
+    else if (c == '+')
+    {
+        return 1;
+    }
+    else
+    return -1;
+}
 bst_sf* insert_bst_sf(matrix_sf *mat, bst_sf *root) {
     if(root==NULL)
     {
@@ -225,11 +242,101 @@ matrix_sf* create_matrix_sf(char name, const char *expr) {
 }
 
 char* infix2postfix_sf(char *infix) {
-    return NULL;
+    char stack[1000];
+    int top = -1;
+
+    char *output = malloc(1000);
+    int index=0;
+    int i =0;
+    while(infix[i]!='\0')
+    {
+        char c = infix[i];
+        if(c == ' ') 
+        {
+            i++;
+            continue;
+        }
+        else if((c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9'))
+        {
+            output[index++] = c;
+        }  
+        else if(c=='(')
+        {
+            stack[++top] = c;
+        }
+        else if(c==')')
+        {
+            while(top>-1 && stack[top]!='(')
+            {
+                output[index++] = stack[top--];
+            }
+            top--;
+        }
+        else if (c == '+' || c == '*' || c == '\'')
+        {
+            while(top>=0 && stack[top]!='(' && prec(stack[top]) >=prec(c))
+            {
+                output[index++]=stack[top--];
+            }
+            stack[++top]=c;
+        }
+        i++;
+    }
+    while(top >= 0) 
+    {
+        output[index++] = stack[top--];
+    }
+
+    output[index] = '\0';
+    return output;
 }
 
 matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
-    return NULL;
+    if(root==NULL || expr ==NULL)
+    {
+        return NULL;
+    }
+
+    char *postfix = infix2postfix_sf(expr);
+
+    matrix_sf *stack[100];
+    int top =-1;
+    int i=0;
+    while(postfix[i]!='\0')
+    {
+        char c = postfix[i];
+        if((c>='a' && c<='z') || (c>='A' && c<='Z'))
+        {
+            matrix_sf *found = find_bst_sf(c, root);
+            stack[++top] = found;
+        }
+        else if(c=='\'')
+        {
+            matrix_sf *t = stack[top];
+            matrix_sf *tTrans = transpose_mat_sf(t);
+            stack[top]=tTrans;
+        }
+        else if(c=='*')
+        {
+            matrix_sf *t1 = stack[top--];
+            matrix_sf *t2 = stack[top--];
+            matrix_sf *t3 = mult_mats_sf(t2, t1);
+            stack[++top] = t3;
+        }
+        else if(c=='+')
+        {
+            matrix_sf *t1 = stack[top--];
+            matrix_sf *t2 = stack[top--];
+            matrix_sf *t3 = add_mats_sf(t2, t1);
+            stack[++top] = t3;
+        }
+        i++;
+    }
+
+    matrix_sf *r = stack[top];
+    r->name = name;
+    free(postfix);
+    return r;
 }
 
 matrix_sf *execute_script_sf(char *filename) {

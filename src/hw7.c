@@ -314,6 +314,10 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
         {
             matrix_sf *t = stack[top];
             matrix_sf *tTrans = transpose_mat_sf(t);
+            if(!((t->name >= 'A' && t->name <= 'Z') || (t->name >= 'a' && t->name <= 'z'))) 
+            {
+                free(t);
+            }
             stack[top]=tTrans;
         }
         else if(c=='*')
@@ -321,6 +325,15 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
             matrix_sf *t1 = stack[top--];
             matrix_sf *t2 = stack[top--];
             matrix_sf *t3 = mult_mats_sf(t2, t1);
+
+            if(!((t1->name >= 'A' && t1->name <= 'Z') || (t1->name >= 'a' && t1->name <= 'z'))) 
+            {
+                free(t1);
+            }
+            if(!((t2->name >= 'A' && t2->name <= 'Z') || (t2->name >= 'a' && t2->name <= 'z'))) 
+            {
+                free(t2);
+            }
             stack[++top] = t3;
         }
         else if(c=='+')
@@ -328,6 +341,16 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
             matrix_sf *t1 = stack[top--];
             matrix_sf *t2 = stack[top--];
             matrix_sf *t3 = add_mats_sf(t2, t1);
+
+            if(!((t1->name >= 'A' && t1->name <= 'Z') || (t1->name >= 'a' && t1->name <= 'z'))) 
+            {
+                free(t1);
+            }
+            if(!((t2->name >= 'A' && t2->name <= 'Z') || (t2->name >= 'a' && t2->name <= 'z'))) 
+            {
+                free(t2);
+            }
+
             stack[++top] = t3;
         }
         i++;
@@ -340,7 +363,61 @@ matrix_sf* evaluate_expr_sf(char name, char *expr, bst_sf *root) {
 }
 
 matrix_sf *execute_script_sf(char *filename) {
-   return NULL;
+    FILE *file = fopen(filename, "r");
+    if(file==NULL)
+    {
+        return NULL;
+    }
+
+    char *line = NULL;
+    size_t len = 0;
+    bst_sf *root = NULL;
+    matrix_sf *result = NULL;
+
+    while(getline(&line, &len, file)!=-1)
+    {   
+        char *temp = line;
+        while(*temp == ' ')
+        {
+            temp++;
+        }
+
+        char name = *temp;
+        temp++;
+        while(*temp==' '|| *temp== '=')
+        {
+            temp++;
+        }
+
+        char *expr = temp;
+
+        int exist = 0;
+        for(int i=0; expr[i]!= '\0'; i++)
+        {
+            if(expr[i] == '[' || expr[i]==']')
+            {
+                exist =1;
+            }
+        }
+
+        if(exist)
+        {
+            result = create_matrix_sf(name, expr);
+        }
+        else
+        {
+            result = evaluate_expr_sf(name, expr, root);
+        }
+
+        root = insert_bst_sf(result, root);
+        
+    }
+    matrix_sf *ans = copy_matrix(result->num_rows, result->num_cols, result->values);
+    fclose(file);
+    free(line);
+    free_bst_sf(root);
+    return ans;
+   
 }
 
 // This is a utility function used during testing. Feel free to adapt the code to implement some of
